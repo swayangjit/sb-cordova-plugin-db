@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-    id="sunbird-plugin-db"
+    id="sb-cordova-plugin-db"
     version="0.0.1">
     <name>A native db plugin for Sunbird</name>
     <description></description>
