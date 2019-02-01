@@ -1,6 +1,6 @@
 var exec = require('cordova/exec');
 
-var PLUGIN_NAME = 'DB';
+var PLUGIN_NAME = 'db';
 
 var db = {
 
