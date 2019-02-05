@@ -54,23 +54,11 @@ public class SunbirdDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        for (Migration migration:migrationList) {
-            for (String query:migration.getQueryList()) {
-                sqLiteDatabase.execSQL(query);
-            }
-        }
         dbLifecycleSubect.toSerialized().onNext(createJsonForOncreate());
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        for (Migration migration:migrationList) {
-            if (migration.isRequired(oldVersion, newVersion)) {
-                for (String query:migration.getQueryList()) {
-                    sqLiteDatabase.execSQL(query);
-                }
-            }
-        }
         dbLifecycleSubect.toSerialized().onNext(createJsonForOnupgrade(oldVersion, newVersion));
     }
 

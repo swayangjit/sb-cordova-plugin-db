@@ -102,6 +102,7 @@ public class SQLiteOperator {
                         break;
                 }
                 jsonArray.put(jsonObject);
+                cursor.moveToNext();
             }
         }
 
