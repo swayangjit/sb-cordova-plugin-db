@@ -135,4 +135,34 @@ public class SQLiteOperator {
         return database.insert(table, null, values);
     }
 
+    public int update(String table, String whereClause, String[] whereArgs, JSONObject jsonObject) throws JSONException {
+
+        ContentValues values = new ContentValues();
+
+        Iterator<String> iterator = jsonObject.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            Object value = jsonObject.get(key);
+
+            if (value instanceof Integer) {
+                values.put(key, (Integer) value);
+            } else if (value instanceof Long) {
+                values.put(key, (Long) value);
+            } else if (value instanceof String) {
+                values.put(key, (String) value);
+            } else if (value instanceof Float) {
+                values.put(key, (Float) value);
+            } else if (value instanceof Double) {
+                values.put(key, (Double) value);
+            }
+
+        }
+
+        return database.update(table, values, whereClause, whereArgs);
+    }
+
+    public int delete(String table, String whereClause, String[] whereArgs) throws JSONException {
+        return database.delete(table, whereClause, whereArgs);
+    }
+
 }

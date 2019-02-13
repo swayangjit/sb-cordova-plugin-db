@@ -16,6 +16,8 @@ public class SunbirdDBPlugin extends CordovaPlugin {
     private static final String METHOD_INIT = "init";
     private static final String METHOD_READ = "read";
     private static final String METHOD_INSERT = "insert";
+    private static final String METHOD_DELETE = "delete";
+    private static final String METHOD_UPDATE = "update";
     private static final String METHOD_EXECUTE = "execute";
     private static final String METHOD_BEGIN_TRANSACTION = "beginTransaction";
     private static final String METHOD_END_TRANSACTION = "endTransaction";
@@ -33,6 +35,12 @@ public class SunbirdDBPlugin extends CordovaPlugin {
                 break;
             case METHOD_INSERT:
                 doInsert(args, callbackContext);
+                break;
+            case METHOD_UPDATE:
+                doUpdate(args, callbackContext);
+                break;
+            case METHOD_DELETE:
+                doDelete(args, callbackContext);
                 break;
             case METHOD_EXECUTE:
                 doExecute(args, callbackContext);
@@ -90,6 +98,35 @@ public class SunbirdDBPlugin extends CordovaPlugin {
                     args.getString(8)
             );
             callbackContext.success(resultArray);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callbackContext.error(e.getMessage());
+        }
+    }
+
+    private void doUpdate(JSONArray args, CallbackContext callbackContext){
+        try {
+            int count = getOperator().update(
+                    args.getString(0),
+                    args.getString(1),
+                    toStringArray(args.getJSONArray(2)),
+                    args.getJSONObject(3)
+            );
+            callbackContext.success(count);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callbackContext.error(e.getMessage());
+        }
+    }
+
+    private void doDelete(JSONArray args, CallbackContext callbackContext) {
+        try {
+            int count = getOperator().delete(
+                    args.getString(0),
+                    args.getString(1),
+                    toStringArray(args.getJSONArray(2))
+            );
+            callbackContext.success(count);
         } catch (Exception e) {
             e.printStackTrace();
             callbackContext.error(e.getMessage());

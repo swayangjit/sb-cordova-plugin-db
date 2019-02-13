@@ -39,6 +39,14 @@ var db = {
         exec(success, error, PLUGIN_NAME, "insert", [table, model]);
     },
 
+    update(table, whereClause, whereArgs, model, success, error) {
+        exec(success, error, PLUGIN_NAME, "update", [table, whereClause, whereArgs, model]);
+    },
+
+    delete(table, whereClause, whereArgs, success, error) {
+        exec(success, error, PLUGIN_NAME, "delete", [table, whereClause, whereArgs]);
+    },
+
     beginTransaction() {
         exec(null, null, PLUGIN_NAME, "beginTransaction", []);
     },
