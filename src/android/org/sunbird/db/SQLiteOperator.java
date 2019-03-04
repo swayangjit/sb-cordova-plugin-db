@@ -39,17 +39,22 @@ public class SQLiteOperator {
             int size = cursor.getCount();
             for (int index = 0; index < size; index++) {
                 JSONObject jsonObject = new JSONObject();
-                switch (cursor.getType(index)) {
-                    case Cursor.FIELD_TYPE_STRING:
-                        jsonObject.put(cursor.getColumnName(index), cursor.getString(index));
-                        break;
-                    case Cursor.FIELD_TYPE_FLOAT:
-                        jsonObject.put(cursor.getColumnName(index), cursor.getFloat(index));
-                        break;
-                    case Cursor.FIELD_TYPE_INTEGER:
-                        jsonObject.put(cursor.getColumnName(index), cursor.getInt(index));
-                        break;
+                int columnCount = cursor.getColumnCount();
+
+                for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                    switch (cursor.getType(columnIndex)) {
+                        case Cursor.FIELD_TYPE_STRING:
+                            jsonObject.put(cursor.getColumnName(columnIndex), cursor.getString(columnIndex));
+                            break;
+                        case Cursor.FIELD_TYPE_FLOAT:
+                            jsonObject.put(cursor.getColumnName(columnIndex), cursor.getFloat(columnIndex));
+                            break;
+                        case Cursor.FIELD_TYPE_INTEGER:
+                            jsonObject.put(cursor.getColumnName(columnIndex), cursor.getInt(columnIndex));
+                            break;
+                    }
                 }
+
                 jsonArray.put(jsonObject);
             }
         }
