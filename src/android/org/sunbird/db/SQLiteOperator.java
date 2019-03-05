@@ -56,6 +56,7 @@ public class SQLiteOperator {
                 }
 
                 jsonArray.put(jsonObject);
+                cursor.moveToNext();
             }
         }
 
