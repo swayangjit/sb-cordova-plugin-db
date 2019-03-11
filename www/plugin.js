@@ -8,6 +8,18 @@ var db = {
         exec(callback, null, PLUGIN_NAME, "init", [dbName, dbVersion, migrations]);
     },
 
+    open(filePath, callback) {
+        exec(callback, null, PLUGIN_NAME, "open", [filePath]);
+    },
+
+    close(isExternalDb, callback) {
+        exec(callback, null, PLUGIN_NAME, "close", [isExternalDb]);
+    },
+
+    copyDatabase(destination,callback) {
+        exec(callback, null, PLUGIN_NAME, "copyDatabase", [destination]);
+    },
+
     read(distinct,
          table,
          columns,
@@ -17,6 +29,7 @@ var db = {
          having,
          orderBy,
          limit,
+         useExternalDb,
          success,
          error) {
 
@@ -28,31 +41,32 @@ var db = {
             groupBy,
             having,
             orderBy,
-            limit]);
+            limit,
+            useExternalDb]);
     },
 
-    execute(query, success, error) {
-        exec(success, error, PLUGIN_NAME, "execute", [query]);
+    execute(query,useExternalDb, success, error) {
+        exec(success, error, PLUGIN_NAME, "execute", [query, useExternalDb]);
     },
 
-    insert(table, model, success, error) {
-        exec(success, error, PLUGIN_NAME, "insert", [table, model]);
+    insert(table, model,useExternalDb, success, error) {
+        exec(success, error, PLUGIN_NAME, "insert", [table, model,useExternalDb]);
     },
 
-    update(table, whereClause, whereArgs, model, success, error) {
-        exec(success, error, PLUGIN_NAME, "update", [table, whereClause, whereArgs, model]);
+    update(table, whereClause, whereArgs, model,useExternalDb, success, error) {
+        exec(success, error, PLUGIN_NAME, "update", [table, whereClause, whereArgs, model,useExternalDb]);
     },
 
-    delete(table, whereClause, whereArgs, success, error) {
-        exec(success, error, PLUGIN_NAME, "delete", [table, whereClause, whereArgs]);
+    delete(table, whereClause, whereArgs, useExternalDb, success, error) {
+        exec(success, error, PLUGIN_NAME, "delete", [table, whereClause, whereArgs,useExternalDb]);
     },
 
     beginTransaction() {
         exec(null, null, PLUGIN_NAME, "beginTransaction", []);
     },
 
-    endTransaction(isOperationSuccessful) {
-        exec(null, null, PLUGIN_NAME, "endTransaction", [isOperationSuccessful]);
+    endTransaction(isOperationSuccessful,useExternalDb) {
+        exec(null, null, PLUGIN_NAME, "endTransaction", [isOperationSuccessful,useExternalDb]);
     }
 
 };
