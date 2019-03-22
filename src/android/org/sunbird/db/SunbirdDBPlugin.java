@@ -160,7 +160,8 @@ public class SunbirdDBPlugin extends CordovaPlugin {
 
     private void doOpen(JSONArray args, CallbackContext callbackContext) throws JSONException {
         try {
-            SunbirdDBHelper.init(new SunbirdDBContext(cordova.getContext(),args.getString(0)),callbackContext);
+            SunbirdDBHelper.initExternalDatabase(new SunbirdDBContext(cordova.getContext(),args.getString(0).replace("file://", "")),callbackContext);
+            callbackContext.success();
         } catch (Exception e) {
             e.printStackTrace();
             callbackContext.error(e.getMessage());
