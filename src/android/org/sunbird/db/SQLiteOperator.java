@@ -50,7 +50,7 @@ public class SQLiteOperator {
                             jsonObject.put(cursor.getColumnName(columnIndex), cursor.getFloat(columnIndex));
                             break;
                         case Cursor.FIELD_TYPE_INTEGER:
-                            jsonObject.put(cursor.getColumnName(columnIndex), cursor.getInt(columnIndex));
+                            jsonObject.put(cursor.getColumnName(columnIndex), cursor.getLong(columnIndex));
                             break;
                     }
                 }
@@ -107,7 +107,7 @@ public class SQLiteOperator {
                             jsonObject.put(cursor.getColumnName(columnIndex), cursor.getFloat(columnIndex));
                             break;
                         case Cursor.FIELD_TYPE_INTEGER:
-                            jsonObject.put(cursor.getColumnName(columnIndex), cursor.getInt(columnIndex));
+                            jsonObject.put(cursor.getColumnName(columnIndex), cursor.getLong(columnIndex));
                             break;
                     }
                 }
