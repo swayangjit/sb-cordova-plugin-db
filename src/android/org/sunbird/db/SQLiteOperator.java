@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 public class SQLiteOperator {
@@ -100,6 +100,9 @@ public class SQLiteOperator {
 
                 for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
                     switch (cursor.getType(columnIndex)) {
+                        case Cursor.FIELD_TYPE_BLOB:
+                            jsonObject.put(cursor.getColumnName(columnIndex), new String(cursor.getBlob(2), StandardCharsets.ISO_8859_1));
+                        break;
                         case Cursor.FIELD_TYPE_STRING:
                             jsonObject.put(cursor.getColumnName(columnIndex), cursor.getString(columnIndex));
                             break;
