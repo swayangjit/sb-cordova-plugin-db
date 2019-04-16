@@ -64,7 +64,11 @@ var db = {
     beginTransaction: function() {
         exec(null, null, PLUGIN_NAME, "beginTransaction", []);
     },
-
+    
+    endTransaction: function(isOperationSuccessful,useExternalDb) {
+        exec(null, null, PLUGIN_NAME, "endTransaction", [isOperationSuccessful,useExternalDb]);
+    },
+    
     getDatabaseVersion: function() {
         exec(null, null, PLUGIN_NAME, "getDatabaseVersion", []);
     },
