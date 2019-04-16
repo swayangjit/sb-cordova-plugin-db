@@ -4,23 +4,23 @@ var PLUGIN_NAME = 'db';
 
 var db = {
 
-    init(dbName, dbVersion, migrations, callback) {
+    init: function(dbName, dbVersion, migrations, callback) {
         exec(callback, null, PLUGIN_NAME, "init", [dbName, dbVersion, migrations]);
     },
 
-    open(filePath, callback) {
+    open: function(filePath, callback) {
         exec(callback, null, PLUGIN_NAME, "open", [filePath]);
     },
 
-    close(isExternalDb, callback) {
+    close: function(isExternalDb, callback) {
         exec(callback, null, PLUGIN_NAME, "close", [isExternalDb]);
     },
 
-    copyDatabase(destination,callback) {
+    copyDatabase: function(destination,callback) {
         exec(callback, null, PLUGIN_NAME, "copyDatabase", [destination]);
     },
 
-    read(distinct,
+    read: function(distinct,
          table,
          columns,
          selection,
@@ -45,28 +45,32 @@ var db = {
             useExternalDb]);
     },
 
-    execute(query,useExternalDb, success, error) {
+    execute: function(query,useExternalDb, success, error) {
         exec(success, error, PLUGIN_NAME, "execute", [query, useExternalDb]);
     },
 
-    insert(table, model,useExternalDb, success, error) {
+    insert: function(table, model,useExternalDb, success, error) {
         exec(success, error, PLUGIN_NAME, "insert", [table, model,useExternalDb]);
     },
 
-    update(table, whereClause, whereArgs, model,useExternalDb, success, error) {
+    update: function(table, whereClause, whereArgs, model,useExternalDb, success, error) {
         exec(success, error, PLUGIN_NAME, "update", [table, whereClause, whereArgs, model,useExternalDb]);
     },
 
-    delete(table, whereClause, whereArgs, useExternalDb, success, error) {
+    delete: function(table, whereClause, whereArgs, useExternalDb, success, error) {
         exec(success, error, PLUGIN_NAME, "delete", [table, whereClause, whereArgs,useExternalDb]);
     },
 
-    beginTransaction() {
+    beginTransaction: function() {
         exec(null, null, PLUGIN_NAME, "beginTransaction", []);
     },
 
-    endTransaction(isOperationSuccessful,useExternalDb) {
-        exec(null, null, PLUGIN_NAME, "endTransaction", [isOperationSuccessful,useExternalDb]);
+    getDatabaseVersion: function() {
+        exec(null, null, PLUGIN_NAME, "getDatabaseVersion", []);
+    },
+
+    bulkInsert: function(query, dataModels) {
+        exec(null, null, PLUGIN_NAME, "bulkInsert", [query, dataModels]);
     }
 
 };
