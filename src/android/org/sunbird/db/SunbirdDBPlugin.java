@@ -1,7 +1,5 @@
 package org.sunbird.db;
 
-import android.support.annotation.NonNull;
-
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
@@ -25,44 +23,43 @@ public class SunbirdDBPlugin extends CordovaPlugin {
     private static final String METHOD_BEGIN_TRANSACTION = "beginTransaction";
     private static final String METHOD_END_TRANSACTION = "endTransaction";
 
-
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 
         switch (action) {
-            case METHOD_INIT:
-                doInit(args, callbackContext);
-                break;
-            case METHOD_OPEN:
-                doOpen(args, callbackContext);
-                break;
-            case METHOD_CLOSE:
-                doClose(args, callbackContext);
-                break;
-            case METHOD_COPY_DATABASE:
-                doCopyDatabase(args, callbackContext);
-                break;
-            case METHOD_READ:
-                doRead(args, callbackContext);
-                break;
-            case METHOD_INSERT:
-                doInsert(args, callbackContext);
-                break;
-            case METHOD_UPDATE:
-                doUpdate(args, callbackContext);
-                break;
-            case METHOD_DELETE:
-                doDelete(args, callbackContext);
-                break;
-            case METHOD_EXECUTE:
-                doExecute(args, callbackContext);
-                break;
-            case METHOD_BEGIN_TRANSACTION:
-                doBeginTransaction();
-                break;
-            case METHOD_END_TRANSACTION:
-                doEndTransaction(args);
-                break;
+        case METHOD_INIT:
+            doInit(args, callbackContext);
+            break;
+        case METHOD_OPEN:
+            doOpen(args, callbackContext);
+            break;
+        case METHOD_CLOSE:
+            doClose(args, callbackContext);
+            break;
+        case METHOD_COPY_DATABASE:
+            doCopyDatabase(args, callbackContext);
+            break;
+        case METHOD_READ:
+            doRead(args, callbackContext);
+            break;
+        case METHOD_INSERT:
+            doInsert(args, callbackContext);
+            break;
+        case METHOD_UPDATE:
+            doUpdate(args, callbackContext);
+            return true;
+        case METHOD_DELETE:
+            doDelete(args, callbackContext);
+            break;
+        case METHOD_EXECUTE:
+            doExecute(args, callbackContext);
+            return true;
+        case METHOD_BEGIN_TRANSACTION:
+            doBeginTransaction();
+            break;
+        case METHOD_END_TRANSACTION:
+            doEndTransaction(args);
+            break;
         }
 
         return true;
@@ -77,13 +74,17 @@ public class SunbirdDBPlugin extends CordovaPlugin {
     }
 
     private void doExecute(JSONArray args, CallbackContext callbackContext) {
-        try {
-            JSONArray resultArray = getOperator(args.getBoolean(1)).execute(args.getString(0));
-            callbackContext.success(resultArray);
-        } catch (Exception e) {
-            e.printStackTrace();
-            callbackContext.error(e.getMessage());
-        }
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                try {
+                    JSONArray resultArray = getOperator(args.getBoolean(1)).execute(args.getString(0));
+                    callbackContext.success(resultArray);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    callbackContext.error(e.getMessage());
+                }
+            }
+        });
     }
 
     private void doInsert(JSONArray args, CallbackContext callbackContext) {
@@ -98,17 +99,9 @@ public class SunbirdDBPlugin extends CordovaPlugin {
 
     private void doRead(JSONArray args, CallbackContext callbackContext) {
         try {
-            JSONArray resultArray = getOperator(args.getBoolean(9)).read(
-                    args.getBoolean(0),
-                    args.getString(1),
-                    toStringArray(args.getJSONArray(2)),
-                    args.getString(3),
-                    toStringArray(args.getJSONArray(4)),
-                    args.getString(5),
-                    args.getString(6),
-                    args.getString(7),
-                    args.getString(8)
-            );
+            JSONArray resultArray = getOperator(args.getBoolean(9)).read(args.getBoolean(0), args.getString(1),
+                    toStringArray(args.getJSONArray(2)), args.getString(3), toStringArray(args.getJSONArray(4)),
+                    args.getString(5), args.getString(6), args.getString(7), args.getString(8));
             callbackContext.success(resultArray);
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,28 +109,25 @@ public class SunbirdDBPlugin extends CordovaPlugin {
         }
     }
 
-    private void doUpdate(JSONArray args, CallbackContext callbackContext){
-        try {
-            int count = getOperator(args.getBoolean(4)).update(
-                    args.getString(0),
-                    args.getString(1),
-                    toStringArray(args.getJSONArray(2)),
-                    args.getJSONObject(3)
-            );
-            callbackContext.success(count);
-        } catch (Exception e) {
-            e.printStackTrace();
-            callbackContext.error(e.getMessage());
-        }
+    private void doUpdate(JSONArray args, CallbackContext callbackContext) {
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                try {
+                    int count = getOperator(args.getBoolean(4)).update(args.getString(0), args.getString(1),
+                            toStringArray(args.getJSONArray(2)), args.getJSONObject(3));
+                    callbackContext.success(count);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    callbackContext.error(e.getMessage());
+                }
+            }
+        });
     }
 
     private void doDelete(JSONArray args, CallbackContext callbackContext) {
         try {
-            int count = getOperator(args.getBoolean(3)).delete(
-                    args.getString(0),
-                    args.getString(1),
-                    toStringArray(args.getJSONArray(2))
-            );
+            int count = getOperator(args.getBoolean(3)).delete(args.getString(0), args.getString(1),
+                    toStringArray(args.getJSONArray(2)));
             callbackContext.success(count);
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,18 +139,17 @@ public class SunbirdDBPlugin extends CordovaPlugin {
         List<Migration> migrationList = prepareMigrations(args);
 
         SunbirdDBContext sunbirdDBContext = new SunbirdDBContext();
-        sunbirdDBContext.setContext(cordova.getContext())
-                .setDbName(args.getString(0))
-                .setDbVersion(args.getInt(1))
+        sunbirdDBContext.setContext(cordova.getContext()).setDbName(args.getString(0)).setDbVersion(args.getInt(1))
                 .setMigrationList(migrationList);
-
 
         SunbirdDBHelper.init(sunbirdDBContext, callbackContext);
     }
 
     private void doOpen(JSONArray args, CallbackContext callbackContext) throws JSONException {
         try {
-            SunbirdDBHelper.initExternalDatabase(new SunbirdDBContext(cordova.getContext(),args.getString(0).replace("file://", "")),callbackContext);
+            SunbirdDBHelper.initExternalDatabase(
+                    new SunbirdDBContext(cordova.getContext(), args.getString(0).replace("file://", "")),
+                    callbackContext);
             callbackContext.success();
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,8 +198,7 @@ public class SunbirdDBPlugin extends CordovaPlugin {
         }
 
         Migration migration = new Migration();
-        migration.setQueryList(queryList)
-                .setTargetDbVersion(migrationObject.getInt("targetDbVersion"));
+        migration.setQueryList(queryList).setTargetDbVersion(migrationObject.getInt("targetDbVersion"));
         return migration;
     }
 
