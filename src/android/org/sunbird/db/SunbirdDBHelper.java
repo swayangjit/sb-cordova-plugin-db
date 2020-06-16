@@ -37,7 +37,7 @@ public class SunbirdDBHelper extends SQLiteOpenHelper {
 
     private SunbirdDBContext sunbirdDBContext;
     private SQLiteOperator sqLiteOperator;
-    private Subject<JSONObject> dbLifecycleSubect;
+//    private Subject<JSONObject> dbLifecycleSubect;
     private List<Migration> migrationList;
 
 
@@ -51,23 +51,23 @@ public class SunbirdDBHelper extends SQLiteOpenHelper {
 
     @SuppressLint("CheckResult")
     private void createEventHandler(CallbackContext callbackContext) {
-        this.dbLifecycleSubect = PublishSubject.create();
-        this.dbLifecycleSubect.subscribe(jsonObject -> {
-            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonObject);
-            pluginResult.setKeepCallback(true);
-
-            callbackContext.sendPluginResult(pluginResult);
-        });
+//        this.dbLifecycleSubect = PublishSubject.create();
+//        this.dbLifecycleSubect.subscribe(jsonObject -> {
+//            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonObject);
+//            pluginResult.setKeepCallback(true);
+//
+//            callbackContext.sendPluginResult(pluginResult);
+//        });
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        dbLifecycleSubect.toSerialized().onNext(createJsonForOncreate());
+//        dbLifecycleSubect.toSerialized().onNext(createJsonForOncreate());
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        dbLifecycleSubect.toSerialized().onNext(createJsonForOnupgrade(oldVersion, newVersion));
+//        dbLifecycleSubect.toSerialized().onNext(createJsonForOnupgrade(oldVersion, newVersion));
     }
 
     public void openDataBase(String filePath) throws SQLException {
