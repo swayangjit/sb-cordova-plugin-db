@@ -12,9 +12,6 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
-
 public class SunbirdDBHelper extends SQLiteOpenHelper {
 
     private static SunbirdDBHelper instance;
